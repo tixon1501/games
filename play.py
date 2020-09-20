@@ -95,12 +95,22 @@ maps = [
            "cave_rock": 1, "riches": 1}, None, {"dragon", "worm"}),
     sector("riches", load_image("riches.jpg"), {
            "underground_lake": 1, "treasure_cave": 1}, None, None),
+    sector("submarine", load_image("submarine.jpg"), {"water": 0, "control": 1}, None, None),
+    sector("control", load_image("control.jpg"), {"submarine": 1, "lake": 0, "uderwater_cave": 0}, None, None),
+    sector("underwater_cave", load_image("underwater_cave.jpg"), {"pit": 1, "control": 0}, None, True),
+    sector("pit", load_image("pit.jpg"), {"underwater_cave": 1, "big_pit": 0}, None, None),
+    sector("big_pit", load_image("big_pit.jpg"), {"pit": 0}, None, True),
+    sector("lake", load_image("lake.jpg"), {"control": 0, "glade": 0}, None, True),
+    sector("glade", load_image("glade.jpg"), {"lake": 0, "forest": 0}, None, True),
+    sector("forest", load_image("forest.jpg"), {"glade": 0, "hollow": 1}, None, None)
 ]
 sect = maps[0]
 set_image(sect.photo)
 subjects = [
     subject("shovel", None, load_image("shovel.jpg")),
-    subject("dinamit", {"cave_rock"}, load_image("dinamit.jpg"))
+    subject("dinamit", {"cave_rock"}, load_image("dinamit.jpg")),
+    subject("key", {"submarine"}, load_image("key.jpg")),
+    subject("net", None, load_image("net.jpg"))
 ]
 
 
