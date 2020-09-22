@@ -180,7 +180,7 @@ def moving(event):  # перемещение
         elif 340 < event.x < 430 and 320 < event.y < 430:
             sect = maps[12]
         elif 400 < event.x < 540 and 320 < event.y < 430:
-            sect = maps[10]
+            sect = maps[9]
     elif sect.destination == "seaweed":
         if event.x < 100:
             sect = maps[7]
@@ -189,6 +189,44 @@ def moving(event):  # перемещение
     elif sect.destination == "bunker":
         if event.y > 600:
             sect = maps[15]
+    elif sect.destination == "lake":
+        if event.y > 500:
+            sect = maps[8]
+        elif event.y < 270:
+            sect = maps[13]
+    elif sect.destination == "glade":
+        if event.y > 600:
+            sect = maps[12]
+        elif 300 < event.y < 400:
+            sect = maps[14]
+    elif sect.destination == "forest":
+        if event.y > 600:
+            sect = maps[13]
+        elif event.x > 600:
+            pass # попадаие в дупло
+    elif sect.destination == "underwater_cave":
+        if event.y < 200:
+            sect = maps[8]
+        elif event.y > 600:
+            sect = maps[10]
+    elif sect.destination == "pit":
+        if 180 < event.x < 550 and 220 < event.y < 510:
+            sect = maps[11]
+        elif event.y > 550:
+            sect = maps[9]
+    elif sect.destination == "big_pit":
+        if event.y < 100:
+            sect = maps[10]
+    elif sect.destination == "cave_control":
+        if 520 < event.x < 620 and  340 < event. y < 410:
+            sect = maps[6]
+        elif event.y > 550:
+            sect = maps[8]
+    elif sect.destination == "riches":
+        if event.x < 400:
+            sect = maps[5]
+        if event.x > 700:
+            sect = maps[17]
 
     set_image(sect.photo)
     x = 0
