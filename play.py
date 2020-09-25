@@ -6,6 +6,7 @@ from tkinter import Tk, Canvas, Frame, BOTH, NW, Button
 from random import randint
 import keyboard
 import time
+from tkinter import messagebox as mb
 
 
 class sector:
@@ -77,12 +78,12 @@ image = []
 image_dop = [load_image("beach1.jpg")]
 
 weapons = [  # оружие
-    weapon(100, 50, load_image("sword.jpg"), "sword"),
-    weapon(800, 50, load_image("arm.jpg"), "arm")
+    weapon(100, 50, photo=load_image("sword.jpg"), destination="sword"),
+    weapon(80, 80, load_image("arm.jpg"), "arm")
 ]
 
 monsters = [  # монстры
-    monster(5000, "dracon", None, weapons[1])
+    monster(500, "dracon", None, weapons[1])
 ]
 
 maps = [
@@ -239,6 +240,9 @@ def moving(event):  # перемещение
     for i in hero.subjects:
         canvas.create_image(25 + 50 * x, 675, image=i.photo)
         x += 1
+    for i in hero.weapon:
+        canvas.create_image(25 + 50 * x, 675, image=i.photo)
+        x += 1
     if not sect.monsters == None:
         monstr = sect.monsters[0]
         battle()
@@ -264,10 +268,12 @@ def battle():  # битва
         print(f"hero.live: {hero.live}; monstr.live: {monstr.live}")
     else:
         if hero.live > 0:
-            print(f"Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
+            mb.showinfo("Победа", f"Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
             sect.monsters.pop(0)
+            if len(sect.monsters) == 0:
+                sect.monsters = None
         else: 
-            print(f"Вы проиграли монстру {monstr.destination}, игра самостоятельно закроется через 5 секунд")
+            mb.showinfo("Проигрыш", f"Вы проиграли монстру {monstr.destination}, игра самостоятельно закроется через 5 секунд")
             time.sleep(5)
             root.destroy()
 
