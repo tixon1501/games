@@ -1,9 +1,11 @@
 from PIL import Image, ImageTk
-from tkinter import Tk
 from tkinter.ttk import Frame, Label
 import sys
 from tkinter import Tk, Canvas, Frame, BOTH, NW, Button
 # from tkinter import *
+from random import randint
+import keyboard
+import time
 
 
 class sector:
@@ -23,12 +25,12 @@ class subject:
 
 
 class monster:
-    def __init__(self, live, destination, best_weapon, attack_power, subjects):
+    def __init__(self, live, destination, subjects, weapon):
         self.live = live
         self.destination = destination
-        self.best_weapon = best_weapon
-        self.attack_power = attack_power
-        self.subjects = subjects
+        self.weapon = weapon
+        # self.attack_power = attack_power
+        self.subjects = subjects  # weapon
 
 
 class weapon:
@@ -46,11 +48,6 @@ class armor:
         self.photo = photo
         self.destination = destination
         self.evasion = evasion
-
-
-monsters = [
-
-]
 
 
 root = Tk()
@@ -79,6 +76,15 @@ def set_image(image):
 image = []
 image_dop = [load_image("beach1.jpg")]
 
+weapons = [  # оружие
+    weapon(100, 50, load_image("sword.jpg"), "sword"),
+    weapon(800, 50, load_image("arm.jpg"), "arm")
+]
+
+monsters = [  # монстры
+    monster(5000, "dracon", None, weapons[1])
+]
+
 maps = [
     sector("pier", load_image("pier.jpg"), {
            "beach": 1, "water": 1}, None, None),
@@ -91,7 +97,7 @@ maps = [
     sector("cave_rock", load_image("cave_rock.jpg"), {
            "cave": 0, "underground_lake": 1}, None, None),
     sector("underground_lake", load_image("underground_lake.jpg"), {
-           "cave_rock": 1, "riches": 1}, None, {"dragon", "worm"}),
+           "cave_rock": 1, "riches": 1}, None, [monsters[0]]),
     sector("riches", load_image("riches.jpg"), {
            "underground_lake": 1, "treasure_cave": 1}, None, None),
     sector("submarine", load_image("submarine.jpg"),
@@ -124,11 +130,12 @@ subjects = [
     subject("net", None, load_image("net.jpg"))
 ]
 
-hero = monster(1000, "hero", None, 100, {subjects[2]})
+hero = monster(1000, "hero", {subjects[2], subjects[1]}, [weapons[0]])
+
 
 def moving(event):  # перемещение
     print(event.x, event.y)
-    global sect, hero, canvas, maps
+    global sect, hero, canvas, maps, monstr
     if sect.destination == "pier":
         if 500 > event.y > 250:
             sect = maps[2]
@@ -203,7 +210,7 @@ def moving(event):  # перемещение
         if event.y > 600:
             sect = maps[13]
         elif event.x > 600:
-            pass # попадаие в дупло
+            pass  # попадаие в дупло
     elif sect.destination == "underwater_cave":
         if event.y < 200:
             sect = maps[8]
@@ -218,7 +225,7 @@ def moving(event):  # перемещение
         if event.y < 100:
             sect = maps[10]
     elif sect.destination == "cave_control":
-        if 520 < event.x < 620 and  340 < event. y < 410:
+        if 520 < event.x < 620 and 340 < event. y < 410:
             sect = maps[6]
         elif event.y > 550:
             sect = maps[8]
@@ -227,14 +234,44 @@ def moving(event):  # перемещение
             sect = maps[5]
         if event.x > 700:
             sect = maps[17]
-
     set_image(sect.photo)
     x = 0
     for i in hero.subjects:
         canvas.create_image(25 + 50 * x, 675, image=i.photo)
         x += 1
+    if not sect.monsters == None:
+        monstr = sect.monsters[0]
+        battle()
+
+
+def battle():  # битва
+    global sect, hero, canvas, maps, monstr, root
+    while hero.live > 0 and monstr.live > 0:
+        weap = monstr.weapon
+        ran = randint(1, 100)
+        if ran > (100 - weap.chance):
+            at = weap.attack
+        else:
+            at = int(weap.attack * ran / 100)
+        hero.live -= at
+        weap = hero.weapon[0]
+        ran = randint(1, 100)
+        if ran > (100 - weap.chance):
+            at = weap.attack
+        else:
+            at = int(weap.attack * ran / 100)
+        monstr.live -= at
+        print(f"hero.live: {hero.live}; monstr.live: {monstr.live}")
+    else:
+        if hero.live > 0:
+            print(f"Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
+            sect.monsters.pop(0)
+        else: 
+            print(f"Вы проиграли монстру {monstr.destination}, игра самостоятельно закроется через 5 секунд")
+            time.sleep(5)
+            root.destroy()
 
 
 canvas.bind('<Button-1>', moving)
-
+keyboard.add_hotkey('Ctrl + 1', lambda: print('Hello'))
 root.mainloop()
