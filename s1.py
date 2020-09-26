@@ -1,0 +1,22 @@
+maps = [
+	sector('pier', pyimage9, {'beach': 1, 'water': 1}, None, None), 
+	sector('beach', pyimage10, {'pier': 1}, {<class '__main__.subject'>, 'shovel'}, None), 
+	sector('water', pyimage11, {'beach': 1, 'cave': 0, 'submarine': 0}, {<__main__.subject object at 0x048E44F0>}, None), 
+	sector('cave', pyimage12, {'water': 1, 'rock_cave': 0}, {'net'}, None), 
+	sector('cave_rock', pyimage13, {'cave': 0, 'underground_lake': 1}, None, None), 
+	sector('underground_lake', pyimage14, {'cave_rock': 1, 'riches': 1}, None, [<__main__.monster object at 0x048E4298>]), 
+	sector('riches', pyimage15, {'underground_lake': 1, 'treasure_cave': 1}, None, None), 
+	sector('submarine', pyimage16, {'water': 0, 'control': 1}, None, None), 
+	sector('control', pyimage17, {'submarine': 1, 'lake': 0, 'uderwater_cave': 0}, None, None), 
+	sector('underwater_cave', pyimage18, {'pit': 1, 'control': 0}, None, True), 
+	sector('pit', pyimage19, {'underwater_cave': 1, 'big_pit': 0}, None, None), 
+	sector('big_pit', pyimage20, {'pit': 0}, None, True), 
+	sector('lake', pyimage21, {'control': 0, 'glade': 0}, None, True), 
+	sector('glade', pyimage22, {'lake': 0, 'forest': 0}, None, True), 
+	sector('forest', pyimage23, {'glade': 0, 'hollow': 1}, None, None), 
+	sector('seaweed', pyimage24, {'submarine': 1, 'bunker': 1}, None, True), 
+	sector('bunker', pyimage25, {'seaweed': 1}, True, None), 
+	sector('cave_control', pyimage26, {'control': 0, 'riches': 1}, None, True), 
+	sector('hollow', pyimage27, {'forest': 1}, {<__main__.subject object at 0x048E4640>}, True), 
+]
+hero = monster ('1000, hero, {<__main__.subject object at 0x048E43B8>, <__main__.subject object at 0x048E4460>, <__main__.subject object at 0x048E44F0>}, [<__main__.weapon object at 0x048E41F0>]

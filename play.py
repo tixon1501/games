@@ -7,6 +7,7 @@ from random import randint
 import keyboard
 import time
 from tkinter import messagebox as mb
+from tkinter import filedialog as fd
 
 
 class sector:
@@ -16,6 +17,11 @@ class sector:
         self.exits = exits  # словарь
         self.subjects = subjects  # класс
         self.monsters = monsters  # класс
+    
+    def __str__(self):
+        self.res = f"\t sector('{self.destination}', {self.photo}, {self.exits}, {self.subjects}, {self.monsters}), \n"
+        return self.res
+        
 
 
 class subject:
@@ -32,6 +38,10 @@ class monster:
         self.weapon = weapon
         # self.attack_power = attack_power
         self.subjects = subjects  # weapon
+    
+    def __str__(self):
+        self.res = f"monster ('{self.live}, {self.destination}, {self.subjects}, {self.weapon}"
+        return self.res
 
 
 class weapon:
@@ -86,13 +96,21 @@ monsters = [  # монстры
     monster(500, "dracon", None, weapons[1])
 ]
 
+subjects = [
+    subject("shovel", None, load_image("shovel.jpg")),
+    subject("dinamit", {"cave_rock"}, load_image("dinamit.jpg")),
+    subject("key", {"submarine"}, load_image("key.jpg")),
+    subject("net", None, load_image("net.jpg")),
+    subject("cable", {"big_pit"}, load_image("cable.jpg"))
+]
+
 maps = [
     sector("pier", load_image("pier.jpg"), {
            "beach": 1, "water": 1}, None, None),
     sector("beach", load_image("beach.jpg"), {
-           "pier": 1}, {"dynamit", "shovel"}, None),
+           "pier": 1}, {subject, "shovel"}, None),
     sector("water", load_image("water.jpg"), {"beach": 1,
-                                              "cave": 0, "submarine": 0}, {"key"}, None),
+                                              "cave": 0, "submarine": 0}, {subjects[2]}, None),
     sector("cave", load_image("cave.jpg"), {
            "water": 1, "rock_cave": 0}, {"net"}, None),
     sector("cave_rock", load_image("cave_rock.jpg"), {
@@ -120,16 +138,12 @@ maps = [
            "submarine": 1, "bunker": 1}, None, True),
     sector("bunker", load_image("bunker.jpg"), {"seaweed": 1}, True, None),
     sector("cave_control", load_image("cave_control.jpg"),
-           {"control": 0, "riches": 1}, None, True)
+           {"control": 0, "riches": 1}, None, True),
+    sector("hollow", load_image("hollow.jpg"),
+           {"forest": 1}, {subjects[4]}, True)
 ]
 sect = maps[0]
 set_image(sect.photo)
-subjects = [
-    subject("shovel", None, load_image("shovel.jpg")),
-    subject("dinamit", {"cave_rock"}, load_image("dinamit.jpg")),
-    subject("key", {"submarine"}, load_image("key.jpg")),
-    subject("net", None, load_image("net.jpg"))
-]
 
 hero = monster(1000, "hero", {subjects[2], subjects[1]}, [weapons[0]])
 
@@ -211,14 +225,14 @@ def moving(event):  # перемещение
         if event.y > 600:
             sect = maps[13]
         elif event.x > 600:
-            pass  # попадаие в дупло
+            sect = maps[18]
     elif sect.destination == "underwater_cave":
         if event.y < 200:
             sect = maps[8]
         elif event.y > 600:
             sect = maps[10]
     elif sect.destination == "pit":
-        if 180 < event.x < 550 and 220 < event.y < 510:
+        if 180 < event.x < 550 and 220 < event.y < 510 and subjects[4] in hero.subjects:
             sect = maps[11]
         elif event.y > 550:
             sect = maps[9]
@@ -268,16 +282,39 @@ def battle():  # битва
         print(f"hero.live: {hero.live}; monstr.live: {monstr.live}")
     else:
         if hero.live > 0:
-            mb.showinfo("Победа", f"Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
+            mb.showinfo(
+                "Победа", f"Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
             sect.monsters.pop(0)
             if len(sect.monsters) == 0:
                 sect.monsters = None
-        else: 
-            mb.showinfo("Проигрыш", f"Вы проиграли монстру {monstr.destination}, игра самостоятельно закроется через 5 секунд")
+        else:
+            mb.showinfo(
+                "Проигрыш", f"Вы проиграли монстру {monstr.destination}, игра самостоятельно закроется через 5 секунд")
             time.sleep(5)
             root.destroy()
 
 
+def saved():
+    answer = mb.askyesno(title="Сохранения", message="Выйти без сохранения?")
+    if answer == True:
+        pass
+    else:
+        file_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),
+                                                    ("Python files", "*.py")))
+        f = open(file_name, 'w')
+        f.write("maps = [\n")
+        for i in maps:
+            s = f"\tsector('{i.destination}', {i.photo}, {i.exits}, {i.subjects}, {i.monsters}), \n"
+            f.write(s)
+        s = f"]\nhero = monster ('{hero.live}, {hero.destination}, {hero.subjects}, {hero.weapon}"
+        f.write(s)
+        f.close()
+    time.sleep(5)
+    root.destroy()
+
+
+
 canvas.bind('<Button-1>', moving)
 keyboard.add_hotkey('Ctrl + 1', lambda: print('Hello'))
+root.protocol("WM_DELETE_WINDOW", saved)
 root.mainloop()
