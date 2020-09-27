@@ -10,7 +10,7 @@ from tkinter import messagebox as mb
 from tkinter import filedialog as fd
 
 
-class sector:
+class Sector:
     def __init__(self, destination, photo, exits, subjects, monsters):
         self.destination = destination
         self.photo = photo  # полное название файла
@@ -19,19 +19,19 @@ class sector:
         self.monsters = monsters  # класс
     
     def __str__(self):
-        self.res = f"\t sector('{self.destination}', {self.photo}, {self.exits}, {self.subjects}, {self.monsters}), \n"
+        self.res = f"\t Sector('{self.destination}', {self.photo}, {self.exits}, {self.subjects}, {self.monsters}), \n"
         return self.res
         
 
 
-class subject:
+class Subject:
     def __init__(self, destination, door, photo):
         self.destination = destination  # str
         self.door = door  # словарь
         self.photo = photo
 
 
-class monster:
+class Monster:
     def __init__(self, live, destination, subjects, weapon):
         self.live = live
         self.destination = destination
@@ -40,11 +40,11 @@ class monster:
         self.subjects = subjects  # weapon
     
     def __str__(self):
-        self.res = f"monster ('{self.live}, {self.destination}, {self.subjects}, {self.weapon}"
+        self.res = f"Monster ('{self.live}, {self.destination}, {self.subjects}, {self.weapon}"
         return self.res
 
 
-class weapon:
+class Weapon:
     def __init__(self, attack, chance, photo, destination):
         self.attack = attack
         self.chance = chance
@@ -88,64 +88,64 @@ image = []
 image_dop = [load_image("beach1.jpg")]
 
 weapons = [  # оружие
-    weapon(100, 50, photo=load_image("sword.jpg"), destination="sword"),
-    weapon(80, 80, load_image("arm.jpg"), "arm")
+    Weapon(100, 50, photo=load_image("sword.jpg"), destination="sword"),
+    Weapon(80, 80, load_image("arm.jpg"), "arm")
 ]
 
 monsters = [  # монстры
-    monster(500, "dracon", None, weapons[1])
+    Monster(500, "dracon", None, weapons[1])
 ]
 
 subjects = [
-    subject("shovel", None, load_image("shovel.jpg")),
-    subject("dinamit", {"cave_rock"}, load_image("dinamit.jpg")),
-    subject("key", {"submarine"}, load_image("key.jpg")),
-    subject("net", None, load_image("net.jpg")),
-    subject("cable", {"big_pit"}, load_image("cable.jpg"))
+    Subject("shovel", None, load_image("shovel.jpg")),
+    Subject("dinamit", {"cave_rock"}, load_image("dinamit.jpg")),
+    Subject("key", {"submarine"}, load_image("key.jpg")),
+    Subject("net", None, load_image("net.jpg")),
+    Subject("cable", {"big_pit"}, load_image("cable.jpg"))
 ]
 
 maps = [
-    sector("pier", load_image("pier.jpg"), {
+    Sector("pier", load_image("pier.jpg"), {
            "beach": 1, "water": 1}, None, None),
-    sector("beach", load_image("beach.jpg"), {
-           "pier": 1}, {subject, "shovel"}, None),
-    sector("water", load_image("water.jpg"), {"beach": 1,
+    Sector("beach", load_image("beach.jpg"), {
+           "pier": 1}, {Subject, "shovel"}, None),
+    Sector("water", load_image("water.jpg"), {"beach": 1,
                                               "cave": 0, "submarine": 0}, {subjects[2]}, None),
-    sector("cave", load_image("cave.jpg"), {
+    Sector("cave", load_image("cave.jpg"), {
            "water": 1, "rock_cave": 0}, {"net"}, None),
-    sector("cave_rock", load_image("cave_rock.jpg"), {
+    Sector("cave_rock", load_image("cave_rock.jpg"), {
            "cave": 0, "underground_lake": 1}, None, None),
-    sector("underground_lake", load_image("underground_lake.jpg"), {
+    Sector("underground_lake", load_image("underground_lake.jpg"), {
            "cave_rock": 1, "riches": 1}, None, [monsters[0]]),
-    sector("riches", load_image("riches.jpg"), {
+    Sector("riches", load_image("riches.jpg"), {
            "underground_lake": 1, "treasure_cave": 1}, None, None),
-    sector("submarine", load_image("submarine.jpg"),
+    Sector("submarine", load_image("submarine.jpg"),
            {"water": 0, "control": 1}, None, None),
-    sector("control", load_image("control.jpg"), {
+    Sector("control", load_image("control.jpg"), {
            "submarine": 1, "lake": 0, "uderwater_cave": 0}, None, None),
-    sector("underwater_cave", load_image("underwater_cave.jpg"),
+    Sector("underwater_cave", load_image("underwater_cave.jpg"),
            {"pit": 1, "control": 0}, None, True),
-    sector("pit", load_image("pit.jpg"), {
+    Sector("pit", load_image("pit.jpg"), {
            "underwater_cave": 1, "big_pit": 0}, None, None),
-    sector("big_pit", load_image("big_pit.jpg"), {"pit": 0}, None, True),
-    sector("lake", load_image("lake.jpg"), {
+    Sector("big_pit", load_image("big_pit.jpg"), {"pit": 0}, None, True),
+    Sector("lake", load_image("lake.jpg"), {
            "control": 0, "glade": 0}, None, True),
-    sector("glade", load_image("glade.jpg"), {
+    Sector("glade", load_image("glade.jpg"), {
            "lake": 0, "forest": 0}, None, True),
-    sector("forest", load_image("forest.jpg"), {
+    Sector("forest", load_image("forest.jpg"), {
            "glade": 0, "hollow": 1}, None, None),
-    sector("seaweed", load_image("seaweed.jpg"), {
+    Sector("seaweed", load_image("seaweed.jpg"), {
            "submarine": 1, "bunker": 1}, None, True),
-    sector("bunker", load_image("bunker.jpg"), {"seaweed": 1}, True, None),
-    sector("cave_control", load_image("cave_control.jpg"),
+    Sector("bunker", load_image("bunker.jpg"), {"seaweed": 1}, True, None),
+    Sector("cave_control", load_image("cave_control.jpg"),
            {"control": 0, "riches": 1}, None, True),
-    sector("hollow", load_image("hollow.jpg"),
+    Sector("hollow", load_image("hollow.jpg"),
            {"forest": 1}, {subjects[4]}, True)
 ]
 sect = maps[0]
 set_image(sect.photo)
 
-hero = monster(1000, "hero", {subjects[2], subjects[1]}, [weapons[0]])
+hero = Monster(1000, "hero", {subjects[2], subjects[1]}, [weapons[0]])
 
 
 def moving(event):  # перемещение
@@ -300,20 +300,34 @@ def saved():
         pass
     else:
         file_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),
-                                                    ("Python files", "*.py")))
+                                                ("All files", "*.*") ))
         f = open(file_name, 'w')
-        f.write("maps = [\n")
+        f.write("maps\n")
         for i in maps:
-            s = f"\tsector('{i.destination}', {i.photo}, {i.exits}, {i.subjects}, {i.monsters}), \n"
+            s = f"{i.destination}\t{i.photo}\t{i.exits}\t{i.subjects}\t{i.monsters}\n"
             f.write(s)
-        s = f"]\nhero = monster ('{hero.live}, {hero.destination}, {hero.subjects}, {hero.weapon}"
+        s = f"\nhero\n{hero.live}\t{hero.destination}\t{hero.subjects}\t{hero.weapon}"
         f.write(s)
         f.close()
     time.sleep(5)
     root.destroy()
 
+def decrypt():
+    file_name = fd.askopenfilename()
+    f = open(file_name)
+    for string in f:
+        string = string.replace('\n', '')
+        temp = string.split('\t')
+        print(temp)
+        if string == "maps":
+            maps.clear()
+        elif string == "hero":
+            break
+        else:
+            maps.append(Sector(temp[0], temp[1], temp[2], temp[3], temp[4]))
+    f.close()
 
-
+decrypt()
 canvas.bind('<Button-1>', moving)
 keyboard.add_hotkey('Ctrl + 1', lambda: print('Hello'))
 root.protocol("WM_DELETE_WINDOW", saved)
