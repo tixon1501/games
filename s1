@@ -1,0 +1,22 @@
+maps
+pier	pyimage9	{'beach': 1, 'water': 1}	None	None
+beach	pyimage10	{'pier': 1}	{<class '__main__.subject'>, 'shovel'}	None
+water	pyimage11	{'beach': 1, 'cave': 0, 'submarine': 0}	{<__main__.subject object at 0x049154F0>}	None
+cave	pyimage12	{'water': 1, 'rock_cave': 0}	{'net'}	None
+cave_rock	pyimage13	{'cave': 0, 'underground_lake': 1}	None	None
+underground_lake	pyimage14	{'cave_rock': 1, 'riches': 1}	None	[<__main__.monster object at 0x04915298>]
+riches	pyimage15	{'underground_lake': 1, 'treasure_cave': 1}	None	None
+submarine	pyimage16	{'water': 0, 'control': 1}	None	None
+control	pyimage17	{'submarine': 1, 'lake': 0, 'uderwater_cave': 0}	None	None
+underwater_cave	pyimage18	{'pit': 1, 'control': 0}	None	True
+pit	pyimage19	{'underwater_cave': 1, 'big_pit': 0}	None	None
+big_pit	pyimage20	{'pit': 0}	None	True
+lake	pyimage21	{'control': 0, 'glade': 0}	None	True
+glade	pyimage22	{'lake': 0, 'forest': 0}	None	True
+forest	pyimage23	{'glade': 0, 'hollow': 1}	None	None
+seaweed	pyimage24	{'submarine': 1, 'bunker': 1}	None	True
+bunker	pyimage25	{'seaweed': 1}	True	None
+cave_control	pyimage26	{'control': 0, 'riches': 1}	None	True
+hollow	pyimage27	{'forest': 1}	{<__main__.subject object at 0x04915640>}	True
+hero
+1000	hero	{<__main__.subject object at 0x04915460>, <__main__.subject object at 0x049154F0>}	[<__main__.weapon object at 0x049151F0>]
