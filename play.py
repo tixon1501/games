@@ -17,11 +17,10 @@ class Sector:
         self.exits = exits  # словарь
         self.subjects = subjects  # класс
         self.monsters = monsters  # класс
-    
+
     def __str__(self):
         self.res = f"\t Sector('{self.destination}', {self.photo}, {self.exits}, {self.subjects}, {self.monsters}), \n"
         return self.res
-        
 
 
 class Subject:
@@ -32,24 +31,25 @@ class Subject:
 
 
 class Monster:
-    def __init__(self, live, destination, subjects, weapon):
+    def __init__(self, live, destination, subjects, attack, chance, photo):
         self.live = live
         self.destination = destination
-        self.weapon = weapon
-        # self.attack_power = attack_power
-        self.subjects = subjects  # weapon
-    
+        self.subjects = subjects
+        self.attack = attack
+        self.chance = chance
+        self.photo = photo
+
     def __str__(self):
         self.res = f"Monster ('{self.live}, {self.destination}, {self.subjects}, {self.weapon}"
         return self.res
 
 
-class Weapon:
+"""class Weapon:
     def __init__(self, attack, chance, photo, destination):
         self.attack = attack
         self.chance = chance
         self.photo = photo
-        self.destination = destination
+        self.destination = destination"""
 
 
 class armor:
@@ -87,16 +87,15 @@ def set_image(image):
 image = []
 image_dop = [load_image("beach1.jpg")]
 
-weapons = [  # оружие
+"""weapons = [  # оружие
     Weapon(100, 50, photo=load_image("sword.jpg"), destination="sword"),
     Weapon(80, 80, load_image("arm.jpg"), "arm")
-    Weapon(100, 80, load_image("fin.jpg"), "fin")
-]
+    Weapon(100, 80, load_image("fin.jpg"), "fin")]"""
 
 monsters = [  # монстры
-    Monster(500, "dracon", None, weapons[1]),
-    Monster(700, "shark", None, Weapon[2]),
-    
+    Monster(500, "dracon", None, 80, 80, load_image("draсon.gif")),
+    Monster(700, "shark", None, 100, 80, load_image("shark.gif")),
+
 ]
 
 subjects = [
@@ -108,10 +107,10 @@ subjects = [
     Subject("boat", {"glade"}, load_image("boat.jpg")),
     Subject("axe", {"forest"}, load_image("axe.jpg")),
     Subject("hammer", {"hollow"}, load_image("hammer.jpg")),
-    Subject("key", {"riches"}, load_image("key1.jpg")),
-    Subject("1001101001000100", {"cave_control"}, load_image("1001101001000100.jpg")),
-    Subject("0100111000100111", {"lake"}, load_image("0100111000100111.jpg")),
-    Subject("1010001110010011", {"underwater_cave"}, load_image("1010001110010011.jpg")),
+    Subject("key", {"riches"}, load_image("key.jpg")),
+    Subject("1001101001000100", {"cave_control"}, True),
+    Subject("0100111000100111", {"lake"}, True),
+    Subject("1010001110010011", {"underwater_cave"}, True),
     Subject("scrap", {"seaweed", "bunker"}, load_image("scrap.jpg"))
 ]
 
@@ -138,7 +137,8 @@ maps = [
            {"pit": 1, "control": 0}, None, True),
     Sector("pit", load_image("pit.jpg"), {
            "underwater_cave": 1, "big_pit": 0}, None, None),
-    Sector("big_pit", load_image("big_pit.jpg"), {"pit": 0}, {subjects[12]}, True),
+    Sector("big_pit", load_image("big_pit.jpg"),
+           {"pit": 0}, {subjects[12]}, True),
     Sector("lake", load_image("lake.jpg"), {
            "control": 0, "glade": 0}, None, True),
     Sector("glade", load_image("glade.jpg"), {
@@ -156,7 +156,9 @@ maps = [
 sect = maps[0]
 set_image(sect.photo)
 
-hero = Monster(1000, "hero", {subjects[2], subjects[1]}, [weapons[0]])
+hero = Monster(
+    1000, "hero", {subjects[2], subjects[1]}, 100, 50, load_image("hero.jpg"))
+monstr = None
 
 
 def moving(event):  # перемещение
@@ -265,9 +267,6 @@ def moving(event):  # перемещение
     for i in hero.subjects:
         canvas.create_image(25 + 50 * x, 675, image=i.photo)
         x += 1
-    for i in hero.weapon:
-        canvas.create_image(25 + 50 * x, 675, image=i.photo)
-        x += 1
     if not sect.monsters == None:
         monstr = sect.monsters[0]
         battle()
@@ -275,32 +274,35 @@ def moving(event):  # перемещение
 
 def battle():  # битва
     global sect, hero, canvas, maps, monstr, root
+    output = []
     while hero.live > 0 and monstr.live > 0:
-        weap = monstr.weapon
         ran = randint(1, 100)
-        if ran > (100 - weap.chance):
-            at = weap.attack
+        if ran > (100 - monstr.chance):
+            at = monstr.attack
         else:
-            at = int(weap.attack * ran / 100)
+            at = int(monstr.attack * ran / 100)
         hero.live -= at
-        weap = hero.weapon[0]
+
         ran = randint(1, 100)
-        if ran > (100 - weap.chance):
-            at = weap.attack
+        if ran > (100 - hero.chance):
+            at = hero.attack
         else:
-            at = int(weap.attack * ran / 100)
+            at = int(hero.attack * ran / 100)
         monstr.live -= at
-        print(f"hero.live: {hero.live}; monstr.live: {monstr.live}")
+        output.append(f"hero.live: {hero.live}; monstr.live: {monstr.live}\n")
     else:
+        string = ""
+        for i in output:
+            string += i
         if hero.live > 0:
             mb.showinfo(
-                "Победа", f"Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
+                "Победа", f"{string}Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
             sect.monsters.pop(0)
             if len(sect.monsters) == 0:
                 sect.monsters = None
         else:
             mb.showinfo(
-                "Проигрыш", f"Вы проиграли монстру {monstr.destination}, игра самостоятельно закроется через 5 секунд")
+                "Проигрыш", f"{string}Вы проиграли монстру {monstr.destination}, игра самостоятельно закроется через 5 секунд")
             time.sleep(5)
             root.destroy()
 
@@ -311,7 +313,7 @@ def saved():
         pass
     else:
         file_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),
-                                                ("All files", "*.*") ))
+                                                    ("All files", "*.*")))
         f = open(file_name, 'w')
         f.write("maps\n")
         for i in maps:
@@ -322,6 +324,8 @@ def saved():
         f.close()
     time.sleep(5)
     root.destroy()
+# переписать обе
+
 
 def decrypt():
     file_name = fd.askopenfilename()
@@ -337,6 +341,7 @@ def decrypt():
         else:
             maps.append(Sector(temp[0], temp[1], temp[2], temp[3], temp[4]))
     f.close()
+
 
 # decrypt()
 canvas.bind('<Button-1>', moving)
