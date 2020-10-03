@@ -90,10 +90,13 @@ image_dop = [load_image("beach1.jpg")]
 weapons = [  # оружие
     Weapon(100, 50, photo=load_image("sword.jpg"), destination="sword"),
     Weapon(80, 80, load_image("arm.jpg"), "arm")
+    Weapon(100, 80, load_image("fin.jpg"), "fin")
 ]
 
 monsters = [  # монстры
-    Monster(500, "dracon", None, weapons[1])
+    Monster(500, "dracon", None, weapons[1]),
+    Monster(700, "shark", None, Weapon[2]),
+    
 ]
 
 subjects = [
@@ -101,44 +104,52 @@ subjects = [
     Subject("dinamit", {"cave_rock"}, load_image("dinamit.jpg")),
     Subject("key", {"submarine"}, load_image("key.jpg")),
     Subject("net", None, load_image("net.jpg")),
-    Subject("cable", {"big_pit"}, load_image("cable.jpg"))
+    Subject("cable", {"big_pit"}, load_image("cable.jpg")),
+    Subject("boat", {"glade"}, load_image("boat.jpg")),
+    Subject("axe", {"forest"}, load_image("axe.jpg")),
+    Subject("hammer", {"hollow"}, load_image("hammer.jpg")),
+    Subject("key", {"riches"}, load_image("key1.jpg")),
+    Subject("1001101001000100", {"cave_control"}, load_image("1001101001000100.jpg")),
+    Subject("0100111000100111", {"lake"}, load_image("0100111000100111.jpg")),
+    Subject("1010001110010011", {"underwater_cave"}, load_image("1010001110010011.jpg")),
+    Subject("scrap", {"seaweed", "bunker"}, load_image("scrap.jpg"))
 ]
 
 maps = [
     Sector("pier", load_image("pier.jpg"), {
            "beach": 1, "water": 1}, None, None),
     Sector("beach", load_image("beach.jpg"), {
-           "pier": 1}, {Subject, "shovel"}, None),
+           "pier": 1}, {subjects[0], subjects[1], subjects[6], subjects[9]}, None),
     Sector("water", load_image("water.jpg"), {"beach": 1,
                                               "cave": 0, "submarine": 0}, {subjects[2]}, None),
     Sector("cave", load_image("cave.jpg"), {
            "water": 1, "rock_cave": 0}, {"net"}, None),
     Sector("cave_rock", load_image("cave_rock.jpg"), {
-           "cave": 0, "underground_lake": 1}, None, None),
+           "cave": 0, "underground_lake": 1}, {subjects[7]}, None),
     Sector("underground_lake", load_image("underground_lake.jpg"), {
            "cave_rock": 1, "riches": 1}, None, [monsters[0]]),
     Sector("riches", load_image("riches.jpg"), {
-           "underground_lake": 1, "treasure_cave": 1}, None, None),
+           "underground_lake": 1, "treasure_cave": 1}, {subjects[8]}, None),
     Sector("submarine", load_image("submarine.jpg"),
-           {"water": 0, "control": 1}, None, None),
+           {"water": 0, "control": 1}, {subjects[5]}, None),
     Sector("control", load_image("control.jpg"), {
            "submarine": 1, "lake": 0, "uderwater_cave": 0}, None, None),
     Sector("underwater_cave", load_image("underwater_cave.jpg"),
            {"pit": 1, "control": 0}, None, True),
     Sector("pit", load_image("pit.jpg"), {
            "underwater_cave": 1, "big_pit": 0}, None, None),
-    Sector("big_pit", load_image("big_pit.jpg"), {"pit": 0}, None, True),
+    Sector("big_pit", load_image("big_pit.jpg"), {"pit": 0}, {subjects[12]}, True),
     Sector("lake", load_image("lake.jpg"), {
            "control": 0, "glade": 0}, None, True),
     Sector("glade", load_image("glade.jpg"), {
-           "lake": 0, "forest": 0}, None, True),
+           "lake": 0, "forest": 0}, {subjects[11]}, True),
     Sector("forest", load_image("forest.jpg"), {
            "glade": 0, "hollow": 1}, None, None),
     Sector("seaweed", load_image("seaweed.jpg"), {
            "submarine": 1, "bunker": 1}, None, True),
     Sector("bunker", load_image("bunker.jpg"), {"seaweed": 1}, True, None),
     Sector("cave_control", load_image("cave_control.jpg"),
-           {"control": 0, "riches": 1}, None, True),
+           {"control": 0, "riches": 1}, {subjects[10]}, True),
     Sector("hollow", load_image("hollow.jpg"),
            {"forest": 1}, {subjects[4]}, True)
 ]
@@ -327,8 +338,8 @@ def decrypt():
             maps.append(Sector(temp[0], temp[1], temp[2], temp[3], temp[4]))
     f.close()
 
-decrypt()
+# decrypt()
 canvas.bind('<Button-1>', moving)
 keyboard.add_hotkey('Ctrl + 1', lambda: print('Hello'))
-root.protocol("WM_DELETE_WINDOW", saved)
+# root.protocol("WM_DELETE_WINDOW", saved)
 root.mainloop()
