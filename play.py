@@ -296,7 +296,7 @@ def battle():  # битва
             string += i
         if hero.live > 0:
             mb.showinfo(
-                "Победа", f"{string}Вы победили монстра {monstr.destination}, у вас осталос {hero.live} жизней")
+                "Победа", f"{string}Вы победили монстра {monstr.destination}, у вас осталосm {hero.live} жизней")
             sect.monsters.pop(0)
             if len(sect.monsters) == 0:
                 sect.monsters = None
@@ -307,22 +307,22 @@ def battle():  # битва
             root.destroy()
 
 
-def saved():
-    answer = mb.askyesno(title="Сохранения", message="Выйти без сохранения?")
+def saved():  # сохранять: hero, monsters, sect
+    answer = mb.askyesno(title="Сохранения", message="Сохранить игру?")
     if answer == True:
-        pass
-    else:
         file_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),
                                                     ("All files", "*.*")))
-        f = open(file_name, 'w')
-        f.write("maps\n")
-        for i in maps:
-            s = f"{i.destination}\t{i.photo}\t{i.exits}\t{i.subjects}\t{i.monsters}\n"
+        f = open(f"{file_name}.txt", 'w')
+        f.write("monsters\n")
+        for i in monsters:
+            s = f"{i.live}\t{i.destination}\n"
             f.write(s)
-        s = f"\nhero\n{hero.live}\t{hero.destination}\t{hero.subjects}\t{hero.weapon}"
+        s = f"\nhero\n{hero.live}\t{hero.destination}\t{hero.subjects}\t{hero.attack}\t{hero.chance}\n"
+        f.write(s)
+        s = f"\nsect\n{sect.destination}"
         f.write(s)
         f.close()
-    time.sleep(5)
+    time.sleep(1)
     root.destroy()
 # переписать обе
 
@@ -346,5 +346,5 @@ def decrypt():
 # decrypt()
 canvas.bind('<Button-1>', moving)
 keyboard.add_hotkey('Ctrl + 1', lambda: print('Hello'))
-# root.protocol("WM_DELETE_WINDOW", saved)
+root.protocol("WM_DELETE_WINDOW", saved)
 root.mainloop()
