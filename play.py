@@ -153,7 +153,7 @@ maps = [
     Sector("hollow", load_image("hollow.jpg"),
            {"forest": 1}, {subjects[4]}, True)
 ]
-sect = maps[0]
+sect = Sector("start", load_image("start.jpg"), None, None, None)
 set_image(sect.photo)
 
 hero = Monster(
@@ -262,6 +262,8 @@ def moving(event):  # перемещение
             sect = maps[5]
         if event.x > 700:
             sect = maps[17]
+    elif sect.destination == "start":
+        decrypt(event)
     set_image(sect.photo)
     x = 0
     for i in hero.subjects:
@@ -312,35 +314,55 @@ def saved():  # сохранять: hero, monsters, sect
     if answer == True:
         file_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),
                                                     ("All files", "*.*")))
-        f = open(f"{file_name}.txt", 'w')
+        f = open(file_name, 'w')
         f.write("monsters\n")
         for i in monsters:
             s = f"{i.live}\t{i.destination}\n"
             f.write(s)
-        s = f"\nhero\n{hero.live}\t{hero.destination}\t{hero.subjects}\t{hero.attack}\t{hero.chance}\n"
+        s = f"{hero.live}\t{hero.destination}\t{hero.attack}\t{hero.chance}\n"
         f.write(s)
-        s = f"\nsect\n{sect.destination}"
+        s = f"\sect\={sect.destination}"
         f.write(s)
         f.close()
     time.sleep(1)
     root.destroy()
-# переписать обе
+# сохранение и рассохранение списка предметов
 
 
-def decrypt():
-    file_name = fd.askopenfilename()
-    f = open(file_name)
-    for string in f:
-        string = string.replace('\n', '')
-        temp = string.split('\t')
-        print(temp)
-        if string == "maps":
-            maps.clear()
-        elif string == "hero":
-            break
-        else:
-            maps.append(Sector(temp[0], temp[1], temp[2], temp[3], temp[4]))
-    f.close()
+def decrypt(event):
+    # красивый экран выбора "Новоя игра", "Загрузить", "Выход"
+    global hero, monsters, sect
+    if 390 < event.x < 600 and 160 < event.y < 220:
+        pass
+        sect = maps[0]
+        set_image(sect.photo)
+    elif 390 < event.x < 600 and 280 < event.y < 340:
+        file_name = fd.askopenfilename()
+        f = open(file_name)
+        for string in f:
+            string = string.replace('\n', '')
+            temp = string.split('\t')
+            print(temp)
+            if string == "monsters":
+                pass
+            elif "hero" in temp:
+                hero.live = int(temp[0])
+                # hero.subjects = string[2]
+                hero.attack = int(temp[2])
+                hero.chance = int(temp[3])
+            elif len(temp) == 2:
+                for i in monsters:
+                    if i.destination == temp[1]:
+                        i.live = int(temp[0])
+            elif "sect" in string:
+                temp = string.split('=')
+                for i in maps:
+                    if i.destination == temp[1]:
+                        sect = i
+                        set_image(sect.photo)
+        f.close()
+    elif 390 < event.x < 600 and 400 < event.y < 460:
+        root.destroy()
 
 
 # decrypt()
