@@ -78,10 +78,6 @@ def set_image(image):
     canvas.delete("all")
 
     canvas.create_image(500, 350, image=image)
-    canvas.create_line(0, 650, 1000, 650, width=5)
-    canvas.create_line(0, 700, 1000, 700, width=5)
-    for i in range(21):
-        canvas.create_line(50 * i, 650, 50 * i, 700, width=5)
 
 
 image = []
@@ -107,10 +103,12 @@ subjects = [
     Subject("boat", {"glade"}, load_image("boat.jpg")),
     Subject("axe", {"forest"}, load_image("axe.jpg")),
     Subject("hammer", {"hollow"}, load_image("hammer.jpg")),
-    Subject("key", {"riches"}, load_image("key.jpg")),
-    Subject("1001101001000100", {"cave_control"}, True),
-    Subject("0100111000100111", {"lake"}, True),
-    Subject("1010001110010011", {"underwater_cave"}, True),
+    Subject("key_s", {"riches"}, load_image("key_s.jpg")),
+    Subject("1001101001000100", {"cave_control"},
+            load_image("1001101001000100.jpg")),
+    Subject("0100111000100111", {"lake"}, load_image("0100111000100111.jpg")),
+    Subject("1010001110010011", {"underwater_cave"},
+            load_image("1010001110010011.jpg")),
     Subject("scrap", {"seaweed", "bunker"}, load_image("scrap.jpg"))
 ]
 
@@ -157,7 +155,7 @@ sect = Sector("start", load_image("start.jpg"), None, None, None)
 set_image(sect.photo)
 
 hero = Monster(
-    1000, "hero", {subjects[2], subjects[1]}, 100, 50, load_image("hero.jpg"))
+    1000, "hero", {subjects[2]}, 100, 50, load_image("hero.jpg"))
 monstr = None
 
 
@@ -198,28 +196,28 @@ def moving(event):  # перемещение
     elif sect.destination == "underground_lake":
         if event.y > 600:
             sect = maps[4]
-        elif 330 < event.x < 510 and 310 < event.y < 450:
+        elif 330 < event.x < 510 and 310 < event.y < 450 and subjects[8] in hero.subjects:
             sect = maps[6]
     elif sect.destination == "submarine":
         if 390 < event.x < 520 and 200 < event.y < 280:
             sect = maps[8]
         elif event.y < 50:
             sect = maps[2]
-        elif 820 < event.x < 880 and 340 < event.y < 410:
+        elif 820 < event.x < 880 and 340 < event.y < 410 and subjects[12] in hero.subjects:
             sect = maps[15]
     elif sect.destination == "control":
         if event.y > 600:
             sect = maps[7]
-        elif 220 < event.x < 330 and 320 < event.y < 430:
+        elif 220 < event.x < 330 and 320 < event.y < 430 and subjects[9] in hero.subjects:
             sect = maps[17]
-        elif 340 < event.x < 430 and 320 < event.y < 430:
+        elif 340 < event.x < 430 and 320 < event.y < 430 and subjects[10] in hero.subjects:
             sect = maps[12]
-        elif 400 < event.x < 540 and 320 < event.y < 430:
+        elif 400 < event.x < 540 and 320 < event.y < 430 and subjects[11] in hero.subjects:
             sect = maps[9]
     elif sect.destination == "seaweed":
         if event.x < 100:
             sect = maps[7]
-        elif event.y > 600:
+        elif event.y > 600 and subjects[12] in hero.subjects:
             sect = maps[16]
     elif sect.destination == "bunker":
         if event.y > 600:
@@ -227,18 +225,21 @@ def moving(event):  # перемещение
     elif sect.destination == "lake":
         if event.y > 500:
             sect = maps[8]
-        elif event.y < 270:
+        elif event.y < 270 and subjects[5] in hero.subjects:
             sect = maps[13]
     elif sect.destination == "glade":
         if event.y > 600:
             sect = maps[12]
-        elif 300 < event.y < 400:
+        elif 300 < event.y < 400 and subjects[6] in hero.subjects:
             sect = maps[14]
     elif sect.destination == "forest":
         if event.y > 600:
             sect = maps[13]
-        elif event.x > 600:
+        elif event.x > 600 and subjects[7] in hero.subjects:
             sect = maps[18]
+    elif sect.destination == "hollow":
+        if event.y > 600:
+            sect = maps[14]
     elif sect.destination == "underwater_cave":
         if event.y < 200:
             sect = maps[8]
@@ -253,7 +254,7 @@ def moving(event):  # перемещение
         if event.y < 100:
             sect = maps[10]
     elif sect.destination == "cave_control":
-        if 520 < event.x < 620 and 340 < event. y < 410:
+        if 520 < event.x < 620 and 340 < event. y < 410 and subjects[8] in hero.subjects:
             sect = maps[6]
         elif event.y > 550:
             sect = maps[8]
@@ -269,7 +270,11 @@ def moving(event):  # перемещение
     for i in hero.subjects:
         canvas.create_image(25 + 50 * x, 675, image=i.photo)
         x += 1
-    if not sect.monsters == None:
+    canvas.create_line(0, 650, 1000, 650, width=5)
+    canvas.create_line(0, 700, 1000, 700, width=5)
+    for i in range(21):
+        canvas.create_line(50 * i, 650, 50 * i, 700, width=5)
+    if not (sect.monsters == None or sect.monsters == True):
         monstr = sect.monsters[0]
         battle()
 
@@ -319,12 +324,15 @@ def saved():  # сохранять: hero, monsters, sect
         for i in monsters:
             s = f"{i.live}\t{i.destination}\n"
             f.write(s)
-        s = f"{hero.live}\t{hero.destination}\t{hero.attack}\t{hero.chance}\n"
+        s = f"{hero.live}\t{hero.destination}\t{hero.attack}\t{hero.chance}\t"
         f.write(s)
-        s = f"\sect\={sect.destination}"
+        for i in hero.subjects:
+            s = f"{i.destination}\t"
+            f.write(s)
+        s = f"\nsect={sect.destination}"
         f.write(s)
         f.close()
-    time.sleep(1)
+    # time.sleep(1)
     root.destroy()
 # сохранение и рассохранение списка предметов
 
@@ -350,6 +358,11 @@ def decrypt(event):
                 # hero.subjects = string[2]
                 hero.attack = int(temp[2])
                 hero.chance = int(temp[3])
+                sub = temp[4:]
+                for i in sub:
+                    for k in subjects:
+                        if i == k.destination:
+                            hero.subjects.add(k)
             elif len(temp) == 2:
                 for i in monsters:
                     if i.destination == temp[1]:

@@ -1,22 +1,5 @@
-maps
-pier	load_image('pier.jpg')	{'beach': 1, 'water': 1}	None	None
-beach	load_image('beach.jpg')	{'pier': 1}	{<class '__main__.Subject'>, 'shovel'}	None
-water	load_image('water.jpg')	{'beach': 1, 'cave': 0, 'submarine': 0}	{<__main__.Subject object at 0x03EB54F0>}	None
-cave	load_image('cave.jpg')	{'water': 1, 'rock_cave': 0}	{'net'}	None
-cave_rock	load_image('cave_rock.jpg')	{'cave': 0, 'underground_lake': 1}	None	None
-underground_lake	load_image('underground_lake.jpg')	{'cave_rock': 1, 'riches': 1}	None	[<__main__.Monster object at 0x03EB5298>]
-riches	load_image('riches.jpg')	{'underground_lake': 1, 'treasure_cave': 1}	None	None
-submarine	load_image('submarine.jpg')	{'water': 0, 'control': 1}	None	None
-control	load_image('control.jpg')	{'submarine': 1, 'lake': 0, 'uderwater_cave': 0}	None	None
-underwater_cave	load_image('underwater_cave.jpg')	{'pit': 1, 'control': 0}	None	True
-pit	load_image('pit.jpg')	{'underwater_cave': 1, 'big_pit': 0}	None	None
-big_pit	load_image('big_pit.jpg')	{'pit': 0}	None	True
-lake	load_image('lake.jpg')	{'control': 0, 'glade': 0}	None	True
-glade	load_image('glade.jpg')	{'lake': 0, 'forest': 0}	None	True
-forest	load_image('forest.jpg')	{'glade': 0, 'hollow': 1}	None	None
-seaweed	load_image('seaweed.jpg')	{'submarine': 1, 'bunker': 1}	None	True
-bunker	load_image('bunker.jpg')	{'seaweed': 1}	True	None
-cave_control	load_image('cave_control.jpg')	{'control': 0, 'riches': 1}	None	True
-hollow	load_image('hollow.jpg')	{'forest': 1}	{<__main__.Subject object at 0x03EB5640>}	True
-hero
-1000	hero	{<__main__.Subject object at 0x03EB53B8>, <__main__.Subject object at 0x03EB5460>, <__main__.Subject object at 0x03EB54F0>}	[<__main__.Weapon object at 0x03EB51F0>]
+monsters
+-46	dracon
+700	shark
+505	hero	100	50	key	shovel	key	dinamit	key	shovel	key	dinamit	key	shovel	key	dinamit	key	shovel	key	dinamit	key	shovel	key	dinamit	
+sect=water
