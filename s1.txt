@@ -1,5 +1,5 @@
 monsters
--46	dracon
+-14	dracon
 700	shark
-505	hero	100	50	key	shovel	key	dinamit	key	shovel	key	dinamit	key	shovel	key	dinamit	key	shovel	key	dinamit	key	shovel	key	dinamit	
-sect=water
+588	hero	100	50	key	boat	key_s	cable	axe	scrap	1001101001000100	shovel	0100111000100111	dinamit	hammer	net	1010001110010011	
+sect=seaweed

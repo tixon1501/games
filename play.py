@@ -155,7 +155,7 @@ sect = Sector("start", load_image("start.jpg"), None, None, None)
 set_image(sect.photo)
 
 hero = Monster(
-    1000, "hero", {subjects[2]}, 100, 50, load_image("hero.jpg"))
+    1000, "hero", set(), 100, 50, load_image("hero.jpg"))
 monstr = None
 
 
@@ -174,8 +174,12 @@ def moving(event):  # перемещение
             set_image(image_dop[0])
             hero.subjects.add(subjects[1])
             maps[1].photo = image_dop[0]
-        elif event.x < 200 and event.y > 450:
+        elif event.x < 200 and event.y > 450 and subjects[6] in hero.subjects:
             hero.subjects.add(subjects[0])
+        elif event.x < 200 and event.y > 450:
+            hero.subjects.add(subjects[6])
+        elif 290 < event.x < 400 and 540 < event.y < 580 and subjects[0] in hero.subjects:
+            hero.subjects.add(subjects[9])
     elif sect.destination == "water":
         if 300 < event.x < 750 and event.y < 100:
             sect = maps[0]
@@ -183,21 +187,29 @@ def moving(event):  # перемещение
             sect = maps[7]
         elif event.x > 750 and 600 > event.y > 400:
             sect = maps[3]
+        elif 100 < event.x < 120 and 430 < event.y < 450 and subjects[3] in hero.subjects:
+            hero.subjects.add(subjects[2])
     elif sect.destination == "cave":
         if event.x < 500 and event.y < 350:
             sect = maps[2]
         elif event.y > 450 and event.x > 500 and subjects[1] in hero.subjects:
             sect = maps[4]
+        elif 90 < event.x > 110 and 540 < event.y < 560:
+            hero.subjects.add(subjects[3])
     elif sect.destination == "cave_rock":
         if 280 < event.y < 420 and 300 < event.x < 800:
             sect = maps[5]
         elif event.y > 500:
             sect = maps[3]
+        elif 280 < event.x < 390 and 420 < event.y < 500:
+            hero.subjects.add(subjects[7])
     elif sect.destination == "underground_lake":
         if event.y > 600:
             sect = maps[4]
         elif 330 < event.x < 510 and 310 < event.y < 450 and subjects[8] in hero.subjects:
             sect = maps[6]
+        elif 300 < event.x < 660 and 530 < event.y < 610 and subjects[3] in hero.subjects:
+            hero.subjects.add(subjects[8])
     elif sect.destination == "submarine":
         if 390 < event.x < 520 and 200 < event.y < 280:
             sect = maps[8]
@@ -205,6 +217,8 @@ def moving(event):  # перемещение
             sect = maps[2]
         elif 820 < event.x < 880 and 340 < event.y < 410 and subjects[12] in hero.subjects:
             sect = maps[15]
+        elif event.x > 590 and event.y > 515:
+            hero.subjects.add(subjects[5])
     elif sect.destination == "control":
         if event.y > 600:
             sect = maps[7]
@@ -230,6 +244,8 @@ def moving(event):  # перемещение
     elif sect.destination == "glade":
         if event.y > 600:
             sect = maps[12]
+        elif 810 < event.x < 830 and 370 < event.y < 390:
+            hero.subjects.add(subjects[11])
         elif 300 < event.y < 400 and subjects[6] in hero.subjects:
             sect = maps[14]
     elif sect.destination == "forest":
@@ -240,6 +256,8 @@ def moving(event):  # перемещение
     elif sect.destination == "hollow":
         if event.y > 600:
             sect = maps[14]
+        elif 310 < event.x < 610 and 170 < event.y < 500:
+            hero.subjects.add(subjects[4])
     elif sect.destination == "underwater_cave":
         if event.y < 200:
             sect = maps[8]
@@ -253,11 +271,15 @@ def moving(event):  # перемещение
     elif sect.destination == "big_pit":
         if event.y < 100:
             sect = maps[10]
+        elif 690 < event.x < 870 and 140 < event.y < 270:
+            hero.subjects.add(subjects[12])
     elif sect.destination == "cave_control":
         if 520 < event.x < 620 and 340 < event. y < 410 and subjects[8] in hero.subjects:
             sect = maps[6]
         elif event.y > 550:
             sect = maps[8]
+        elif 90 < event.x < 110 and 360 < event.y < 380:
+            hero.subjects.add(subjects[10])
     elif sect.destination == "riches":
         if event.x < 400:
             sect = maps[5]
